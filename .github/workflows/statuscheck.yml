@@ -1,0 +1,25 @@
+name: Global PR Check Runner
+
+on:
+  pull_request:
+
+jobs:
+  finalize-pr-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: pr-check
+        run: echo "Running pr-check for finalize-pr-check"
+
+  call-workflow-buildgate:
+    name: call-workflow / buildgate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Buildgate
+        run: echo "Running buildgate workflow"
+
+  check-workflow-exists:
+    name: check_workflow_exists
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check workflow exists
+        run: echo "Checking if required workflow exists"
