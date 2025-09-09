@@ -1,0 +1,39 @@
+name: Globally Enforced PR Checks
+
+on:
+  pull_request:
+    branches: ['master']
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+env:
+  PR_TITLE_PATTERN: '^AB#[0-9]+ .+$' # pattern for PR title validation
+
+jobs:
+  pr-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Branch
+        uses: actions/checkout@v4
+      - name: Verify PR Title
+        run: |
+          if [[ "${{ github.event.pull_request.title }}" =~ $PR_TITLE_PATTERN ]]; then
+            echo "PR title is valid."
+          else
+            echo "PR title does not follow the required format."
+            echo "Expected format: 'AB#<number> <description>'"
+            exit 1
+          fi
+      - name: Check for Case-Sensitive File Duplicates
+        run: |
+          output=$(git ls-files | sort -f | uniq -D -i);
+          if [ -n "$output" ]; then
+            echo "Case-sensitive file duplicates found:"
+            echo "$output"
+            exit 1
+          else
+            echo "No case-sensitive file duplicates found."
+          fi
