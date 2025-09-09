@@ -1,0 +1,13 @@
+name: Second Globally Enforced PR Checks
+
+on:
+  pull_request:
+    branches: ['master']
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  pr-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify PR Title
+        run: echo "Hi"
